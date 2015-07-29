@@ -28,7 +28,7 @@ This will create a library file along with a C++ source and C++ header in the `M
 
 # Approach
 
-A small interface function called `straticounter_scibox.m` was written to interface with the `straticounter.m` function. This is an attempt to decouple the interface of scibox from that of the MATLAB tool. The main funciton `straticounter.m` needed to be modified in two key ways:
+A small interface function called `straticounter_scibox.m` was written to interface with the `straticounter.m` function. This is an attempt to decouple the interface of scibox from that of the MATLAB tool. The main function `straticounter.m` needed to be modified in two key ways:
 
 1. Some code in the file should not run when used as a library (like plots) - Specifically for plots it turns out the easiest/best way to address this was to force the Runtype.plotlevel variable to be zero when the code is deployed. In general the `isdeployed` variable was used to make these conditions. Example:
 
@@ -47,8 +47,14 @@ A small interface function called `straticounter_scibox.m` was written to interf
 In order to create an executable (that can be run from the terminal):
 
 Linux:
-```mbuild -output straticounter_scibox_linux MCR_Library_Linux/Straticounter.cpp MCR_Library_Linux/libStraticounter.so```
-Linux:
-```*** put something here ***```
+```
+mbuild -output straticounter_scibox_linux MCR_Library_Linux/Straticounter.cpp MCR_Library_Linux/libStraticounter.so
+```
+Mac:
+```
+*** put something here ***
+```
 Windows:
-'''mbuild -output straticounter_scibox_winx64 MCR_Library_Windows_x64/Straticounter.cpp MCR_Library_Windows_x64/libStraticounter.lib```
+```
+mbuild -output straticounter_scibox_winx64 MCR_Library_Windows_x64/Straticounter.cpp MCR_Library_Windows_x64/libStraticounter.lib
+```
