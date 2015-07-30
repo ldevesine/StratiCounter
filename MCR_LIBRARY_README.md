@@ -42,8 +42,9 @@ A small interface function called `straticounter_scibox.m` was written to interf
 2. The interface to scibox requires the ability to specify an arbitrary output directory - This was addressed by extending the `Runtype` structure to include a variable called `outdir` and modifying the `makeoutputfolder.m` to use the `Runtype.outdir` variable for the path of the directory if it is not empty.
 3. In order to accomplish items 1 and 2 the function `straticounter.m` now takes a variable number of inputs. When given 1 parameter the function works the same as before. When called with 2 parameters (like `straticounter_scibox.m` does) the inputs are a path to the data file to load and the path for the desired output directory.
 
-#Terminal executable for testing
+# Terminal executable for testing
 
+## Creating the Executable
 In order to create an executable (that can be run from the terminal):
 
 Linux:
@@ -58,6 +59,8 @@ Windows:
 ```
 mbuild -output straticounter_scibox_winx64 MCR_Library_Windows_x64/Straticounter.cpp MCR_Library_Windows_x64/libStraticounter.lib
 ```
+
+## Running the Executable
 
 In order to run the executable you must provide two command-line arguments
 
