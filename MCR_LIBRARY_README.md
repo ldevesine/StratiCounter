@@ -58,3 +58,23 @@ Windows:
 ```
 mbuild -output straticounter_scibox_winx64 MCR_Library_Windows_x64/Straticounter.cpp MCR_Library_Windows_x64/libStraticounter.lib
 ```
+
+In order to run the executable you must provide two command-line arguments
+
+1. The Path to the settings file (a `.mat` file that follows the Straticounter conventions)
+2. The Path to the output directory (this directory will be created)
+
+This repository contains example data for testing. An invocation of the executable using the example data provided with this repository looks like this:
+
+Linux:
+```
+./straticounter_scibox_linux Settings/sett_example_compiled.mat test/
+```
+Mac:
+```
+*** put something here ***
+```
+Windows:
+```
+straticounter_scibox_winx64.exe Settings\sett_example_compiled.mat test\
+```
