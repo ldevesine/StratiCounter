@@ -31,38 +31,15 @@ NOTE: You will need administrator rights to run MCRInstaller.
 
 2. Files to Deploy and Package
 
-Files to package for Standalone 
-================================
--run_straticounter_scibox.sh (shell script for temporarily setting environment variables 
- and executing the application)
-   -to run the shell script, type
-   
-       ./run_straticounter_scibox.sh <mcr_directory> <argument_list>
-       
-    at Linux or Mac command prompt. <mcr_directory> is the directory 
-    where version 8.4 of the MATLAB runtime is installed or the directory where 
-    MATLAB is installed on the machine. <argument_list> is all the 
-    arguments you want to pass to your application. For example, 
-
-    If you have version 8.4 of the MATLAB runtime installed in 
-    /mathworks/home/application/v84, run the shell script as:
-    
-       ./run_straticounter_scibox.sh /mathworks/home/application/v84
-       
-    If you have MATLAB installed in /mathworks/devel/application/matlab, 
-    run the shell script as:
-    
-       ./run_straticounter_scibox.sh /mathworks/devel/application/matlab
+Files to package for Shared Libraries
+=====================================
+-libStraticounter.dylib
+-libStraticounter.h
 -MCRInstaller.zip 
    -if end users are unable to download the MATLAB runtime using the above  
     link, include it when building your component by clicking 
     the "Runtime downloaded from web" link in the Deployment Tool
--The Macintosh bundle directory structure straticounter_scibox.app 
-   -this can be gathered up using the zip command 
-    zip -r straticounter_scibox.zip straticounter_scibox.app
-    or the tar command 
-    tar -cvf straticounter_scibox.tar straticounter_scibox.app
--This readme file 
+-This readme file
 
 3. Definitions
 
@@ -100,18 +77,6 @@ A. Mac systems:
               setenv command.
         NOTE: The environment variable syntax utilizes forward 
               slashes (/), delimited by colons (:).  
-        NOTE: When deploying standalone applications, it is possible 
-              to run the shell script file run_straticounter_scibox.sh 
-              instead of setting environment variables. See 
-              section 2 "Files to Deploy and Package".    
-
-
-
-5. Launching of application using Macintosh finder.
-
-If the application is purely graphical, that is, it doesn't read from standard in or 
-write to standard out or standard error, it may be launched in the finder just like any 
-other Macintosh application.
 
 
 

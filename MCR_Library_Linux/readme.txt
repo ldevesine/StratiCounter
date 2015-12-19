@@ -15,7 +15,7 @@ MATLAB Compiler
 
   (2) run the MATLAB runtime installer.
 
-Or download the Linux 64-bit version of the MATLAB runtime for R2014b 
+Or download the Macintosh version of the MATLAB runtime for R2014b 
 from the MathWorks Web site by navigating to
 
    http://www.mathworks.com/products/compiler/mcr/index.html
@@ -26,11 +26,14 @@ Distribution to End Users in the MATLAB Compiler documentation
 in the MathWorks Documentation Center.    
 
 
+NOTE: You will need administrator rights to run MCRInstaller. 
+
+
 2. Files to Deploy and Package
 
 Files to package for Shared Libraries
 =====================================
--libStraticounter.so
+-libStraticounter.dylib
 -libStraticounter.h
 -MCRInstaller.zip 
    -if end users are unable to download the MATLAB runtime using the above  
@@ -49,20 +52,19 @@ Center.
 
 4. Appendix 
 
-A. Linux x86-64 systems:
+A. Mac systems:
    On the target machine, add the MATLAB runtime directory to the environment variable 
-   LD_LIBRARY_PATH by issuing the following commands:
+   DYLD_LIBRARY_PATH by issuing the following commands:
 
         NOTE: <mcr_root> is the directory where MATLAB runtime is installed
               on the target machine.         
 
-            setenv LD_LIBRARY_PATH
-                $LD_LIBRARY_PATH:
-                <mcr_root>/v84/runtime/glnxa64:
-                <mcr_root>/v84/bin/glnxa64:
-                <mcr_root>/v84/sys/os/glnxa64:
-                <mcr_root>/v84/sys/opengl/lib/glnxa64
-            setenv XAPPLRESDIR <mcr_root>/v84/X11/app-defaults
+            setenv DYLD_LIBRARY_PATH
+                $DYLD_LIBRARY_PATH:
+                <mcr_root>/v84/runtime/maci64:
+                <mcr_root>/v84/sys/os/maci64:
+                <mcr_root>/v84/bin/maci64
+
 
    For more detail information about setting the MATLAB runtime paths, see Distribution 
    to End Users in the MATLAB Compiler documentation in the MathWorks Documentation 

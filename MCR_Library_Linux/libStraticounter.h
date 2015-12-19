@@ -1,13 +1,13 @@
 //
 // MATLAB Compiler: 5.2 (R2014b)
-// Date: Tue Jun  9 11:50:18 2015
-// Arguments: "-B" "macro_default" "-g" "-G" "-W" "cpplib:libStraticounter"
-// "-T" "link:lib" "-d" "MCR_Library/" "-I" "Subroutines/" "-I"
+// Date: Fri Sep 25 10:56:59 2015
+// Arguments: "-B" "macro_default" "-W" "cpplib:libStraticounter" "-T"
+// "link:lib" "-d" "MCR_Library_Linux/" "-I" "Subroutines/" "-I"
 // "Subroutines/algorithm/" "-I" "Subroutines/batchresults/" "-I"
 // "Subroutines/checkinput/" "-I" "Subroutines/layertemplates/" "-I"
 // "Subroutines/matchmaker/" "-I" "Subroutines/preprocessing/" "-I"
 // "Subroutines/showresults/" "-I" "Subroutines/syntheticdata/" "-I"
-// "Subroutines/utilities/" "straticounter_scibox.m"
+// "Subroutines/utilities/" "straticounter_scibox.m" 
 //
 
 #ifndef __libStraticounter_h
@@ -56,30 +56,30 @@ extern "C" {
 #endif
 
 /* This symbol is defined in shared libraries. Define it here
- * (to nothing) in case this isn't a shared library.
+ * (to nothing) in case this isn't a shared library. 
  */
-#ifndef LIB_libStraticounter_C_API
+#ifndef LIB_libStraticounter_C_API 
 #define LIB_libStraticounter_C_API /* No special import/export declaration */
 #endif
 
-extern LIB_libStraticounter_C_API
+extern LIB_libStraticounter_C_API 
 bool MW_CALL_CONV libStraticounterInitializeWithHandlers(
-       mclOutputHandlerFcn error_handler,
+       mclOutputHandlerFcn error_handler, 
        mclOutputHandlerFcn print_handler);
 
-extern LIB_libStraticounter_C_API
+extern LIB_libStraticounter_C_API 
 bool MW_CALL_CONV libStraticounterInitialize(void);
 
-extern LIB_libStraticounter_C_API
+extern LIB_libStraticounter_C_API 
 void MW_CALL_CONV libStraticounterTerminate(void);
 
 
 
-extern LIB_libStraticounter_C_API
+extern LIB_libStraticounter_C_API 
 void MW_CALL_CONV libStraticounterPrintStackTrace(void);
 
-extern LIB_libStraticounter_C_API
-bool MW_CALL_CONV mlxStraticounter_scibox(int nlhs, mxArray *plhs[], int nrhs, mxArray
+extern LIB_libStraticounter_C_API 
+bool MW_CALL_CONV mlxStraticounter_scibox(int nlhs, mxArray *plhs[], int nrhs, mxArray 
                                           *prhs[]);
 
 
@@ -106,7 +106,7 @@ bool MW_CALL_CONV mlxStraticounter_scibox(int nlhs, mxArray *plhs[], int nrhs, m
 #if defined(LIB_libStraticounter_C_API)
 #define LIB_libStraticounter_CPP_API LIB_libStraticounter_C_API
 #else
-#define LIB_libStraticounter_CPP_API /* empty! */
+#define LIB_libStraticounter_CPP_API /* empty! */ 
 #endif
 #endif
 
