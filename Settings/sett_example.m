@@ -80,6 +80,7 @@ Model.ageUnitManual = 'AD';
 % manual layer counts: 
 Model.manualtemplates = [Model.dstart Model.dend];
 
+
 %% Initial model parameters and variation allowed:
 % The initial set of layer parameters will be based on manual layer counts.
 % Depth interval used to estimate these:
