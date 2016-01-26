@@ -10,13 +10,29 @@ if isempty(manualcounts);
     return; 
 end
 
+%% Ensure that the increase/decreasing age numbers correspond to the
+% selected value of ageUnitManual:
+if size(manualcounts,1)>1 
+    if manualcounts(2,2)-manualcounts(1,2)>0 
+        % An increase in age values with increasing depth is not consistent 
+        % with manual counts age unit "AD"
+        if strcmp(Model.ageUnitManual,'AD')
+            warning(['OBS: Age values are increasing with depth, which is '...
+                'inconsistent with the value of Model.ageUnitManual ("AD"):'])
+            warning('     Model.ageUnitManual is changed to "layers"');
+            Model.ageUnitManual = 'layers';
+        end
+    end
+end
+
 %% Uncertainties of the individual layers: 
 % Must either be ones or zeros:
 mask = manualcounts(:,3)~=0 & manualcounts(:,3)~=1;
 if sum(mask)>0
-    disp(['Check manual layer uncertainties. These must either be given a ' ...
-        'value of 0 (certain) or 1 (uncertain)']);
-    return
+    warning(['Check manual layer uncertainties. These must either be given '...
+        'a value of 0 (certain) or 1 (uncertain). For now, they have been '...
+        'assumed certain.']);
+    manualcounts(mask,:) = 0;
 end
 
 %% Accumulated uncertainty within current depth interval: 
@@ -45,20 +61,18 @@ end
 % If only relative ages are given, age convention of the output must also
 % be relative:
 % If tiepoints exist, these are used to provide ages:
-if ~isempty(Model.tiepoints)
+if ~isempty(Model.tiepoints) 
     if strcmp(Model.ageUnitTiepoints,'layers')
         Model.ageUnitOut = 'layers';
         disp('Age units of resulting timescale is changed to "layers"')
     end
-else
-    % Use ages from manual counts:
-    if ~strcmp(Model.ageUnitOut,'layers')
-        Model.ageUnitOut = 'layers';
-        disp('Age units of resulting timescale is changed to "layers"')
-    end
+end
+if strcmp(Model.ageUnitManual,'layers')
+    Model.ageUnitOut = 'layers';
+    disp('Age units of resulting timescale is changed to "layers"')
 end
         
-% Then convert to ageUnitOut:
+%% Then convert to ageUnitOut:
 switch Model.ageUnitOut
     case 'AD'
         manualcounts(:,2) = [2000-manualcounts(1,2); 2000-manualcounts(1:end-1,2)-1];

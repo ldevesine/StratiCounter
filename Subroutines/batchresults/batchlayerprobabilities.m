@@ -1,8 +1,8 @@
 function [ntau, ntauTotal, LayerProbDist] = ...
-    batchlayerprobs(depth,FBprob,tau,Layer0,prctile,plotlevel)
+    batchlayerprobabilities(depth,FBprob,tau,Layer0,prctile,plotlevel)
 
-%% [ntau, ntauTotal, LayerProbDist] = batchlayerprobs(depth,FBprob,tau,...
-%   Layer0,prctile,plotlevel)
+%% [ntau, ntauTotal, LayerProbDist] = batchlayerprobabilities(depth,FBprob,...
+%   tau,Layer0,prctile,plotlevel)
 % Calculating the probability distribution of number of layers in current 
 % batch (ntau) and total number of layers in data series up to end of 
 % current batch (ntauTotal), along with various properties of the changing 
@@ -58,7 +58,6 @@ for t = 1:tau
     % Resulting probability distribution:
     probdist = convolveprobdist(Layer0.no,...
         [(0:ntau(end,1))',FBprob.gamma(t,1:ntau(end,1)+1)'],zerolimit); 
-    
     % Inset in layer probability array:
     layerprob(t,probdist(:,1)-yrmin+1) = probdist(:,2);
     % Note: Indexing in layerprob (and gamma) is layer+1, since index 0 

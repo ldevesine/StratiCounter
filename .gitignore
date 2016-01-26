@@ -2,6 +2,9 @@
 *.asv
 *.docx
 *.xlsx
+*.jpg
+*.tif
+*.txt
 Output/*
 Data/*
 !Data/data_empty.mat
@@ -15,4 +18,6 @@ Settings/*
 Subroutines/matchmaker/files_main.m
 Subroutines/matchmaker/matchmaker_sett.mat
 Subroutines/matchmaker/data/*
+Tiepoints/
 Mai's stuff/*
+Tests/

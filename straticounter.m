@@ -1,30 +1,30 @@
-function straticounter(varargin)
-%% STRATICOUNTER A Layer counting algorithm
+function outputdir = straticounter(varargin)
+
+%% STRATICOUNTER: A layer counting algorithm
 % STRATICOUNTER(settings_file_name) loads settings from the named file in
-%   "settings_file_name" The file name should not include the ".m"
-%   extension
+%   "settings_file_name". 
 %
 % STRATICOUNTER(settings_path, output_path) loads settings from a ".mat"
 %   file whose path and name is given in "settings_path". The output of the
-%   function will be saved in the "output_path"
+%   function will be saved in the "output_path".
 %
-%INPUTS:
-%   settings_file_name (string): name of the settings file (.m) to load.
+% INPUTS:
+%   settings_file_name (string): Name of the settings file (.m) to load.
 %       It is assumed that the file is located in a local folder
-%       called "Settings"
-%   settings_path (string): path to the file (.mat) from which the
-%       settings should be loaded
-%   output_path (string): path to the folder where the output of the
-%       funciton should be written
+%       called "Settings".
+%   settings_path (string): Path to the file (.mat) from which the
+%       settings should be loaded.
+%   output_path (string): Path to the folder where the output of the
+%       function should be written.
 %
-%OUTPUTS:
-%   When providing only 1 argument the output files will be placed in a
+% OUTPUTS:
+%   When providing only 1 argument, the output files will be placed in a
 %   local folder named "Output"
 %
-%   When providing 2 arguments the output files will be saved in the
-%   folder specified by the "output_path" argument
+%   When providing 2 arguments, the output files will be saved in the
+%   folder specified by the "output_path" argument.
 %
-%DETAILS:
+% DETAILS:
 % The algorithm is based on the principles of statistical inference of
 % hidden states in semi-Markov processes. States, and their associated
 % confidence intervals, are inferred by the Forward-Backward algorithm.
@@ -50,8 +50,7 @@ function straticounter(varargin)
 % Winstrup et al., An automated approach for annual layer counting in
 % ice cores, Clim. Past. 8, 1881-1895, 2012.
 %
-%%%%%
-% Copyright (C) 2015  Mai Winstrup
+%% Copyright (C) 2015  Mai Winstrup
 % Files associated with the matchmaker software (matchmaker.m,
 % matchmaker_evaluate.m) is authored and copyrighted by Sune Olander
 % Rasmussen.
@@ -70,18 +69,16 @@ function straticounter(varargin)
 % with this program; if not, write to the Free Software Foundation, Inc.,
 % 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-if ~isdeployed
-    % use the `isdeployed` variable to know whether this is a compiled instance
-    % of the code or not.
+%% Release date:
+releasedate = '07-07-2015';
 
-    % If compiled we do not need to clc or close anything
-    clc; close all;
-end
-
-releasedate = '30-04-2015';
-
-%% Add paths to subroutines and settings folders:
-if ~isdeployed
+%% Paths to subroutine and settings folders:
+if ~isdeployed % shows whether this is a compiled instance of the code
+    % Header for current run:
+    disp('==========================================')
+    disp(varargin{1})
+    disp('==========================================')
+    % close all
     addpath(genpath('./Subroutines'))
     addpath(genpath('./Settings'))
 end
@@ -92,36 +89,36 @@ Model = defaultsettings();
 % Add release date:
 Model.releasedate = releasedate;
 
-% make generic message to be used when incorrect number of inputs are used
+%% Core-specific settings:
+% Make generic message to be used when incorrect number of inputs are used:
 vararg_err = 'This function accepts a maximum of two (2) input arguments';
 
-% use 'nargin' to see how many input arguments were used and select appropriate
-% behavior
-if nargin == 1
-    % Use core-specific settings:
+% Use 'nargin' to see the number of input arguments, and select appropriate 
+% behavior:
+if nargin == 1    
     % Check that settings file exists:
-    if ~exist(['Settings/' varargin{1} '.m'],'file')
+    if ~exist(['Settings/' varargin{1}],'file')
         error('Settings file unknown, please correct')
     end
-    %Import settings
+    % Import settings:
     run(varargin{1});
 elseif nargin ==2
-    Model = varargin{1};
+    run(varargin{1});
 else
     error(vararg_err);
 end
 
 %% Select how to run the script:
-if nargin ==1
+if nargin == 1
     Runtype.develop = 'no';
-    % In development mode; will run as normal, but output will be put in the
-    % ./Output/develop folder. Option to run for only a few batches.
-    Runtype.reuse = 'yes';
+    % In development mode; will run as normal, but output will be put in 
+    % the ./Output/develop folder. Option to run for only a few batches.
+    Runtype.reuse = 'no'; %'yes';
     % If yes; use previously processed data and calculated layer templates.
     % If no, these are re-calculated.
     Runtype.outdir = '';
-    %provide this if you have a custom output directory that you want to
-    %provide
+    % Provide path if wanting to use a custom output directory.
+    
 elseif nargin == 2
     Runtype.develop = 'no';
     Runtype.reuse = 'no';
@@ -130,13 +127,14 @@ else
     error(vararg_err)
 end
 
+% Plotting:
+% Options: 0: 'none' (no plots), 1: 'info' (few plots), 2: 'debug' (all plots)
 if isdeployed
     % Force to no plots when run as compiled library
     Runtype.plotlevel = 0;
 else
-    Runtype.plotlevel = 2;
+    Runtype.plotlevel = 1;
 end
-% Options: 0: 'none' (no plots), 1: 'info' (few plots), 2: 'debug' (all plots)
 
 % Display info messages if different from standard settings:
 if strcmp(Runtype.develop,'yes');
@@ -146,7 +144,7 @@ if strcmp(Runtype.reuse,'no');
     disp('Will reprocess data and recalculate layer templates');
 end
 if Runtype.plotlevel>1;
-    disp('Plots will be generated');
+    disp('Many plots will be generated');
 end
 
 %% Ensure correct format of content in Model:
@@ -161,8 +159,16 @@ if strcmp(Model.icecore,'SyntheticData')
     [Data, manualcounts, Model] = makesyntheticdata(Model,Runtype,outputdir);
 
 else
-    % Load manually-counted annual layers:
+    % Load manually-counted annual layers for interval:
     [manualcounts, meanLambda] = loadlayercounts(Model,[Model.dstart Model.dend]);
+    % If no manual counts are known, an empty array is provided, and
+    % meanLambda is estimated by user:
+    while isnan(meanLambda) || meanLambda <= 0
+        disp(['Rough estimate for mean layer thickness (in m) '...
+            'over layer counting interval'])
+        meanLambda = input(['(used for finding data gabs and '...
+            'estimating value of nBatch): ']);
+    end
 
     % Check format, and convert ages to ageUnitOut:
     [manualcounts, Model] = adjustmanualcounts(manualcounts,Model);
@@ -175,17 +181,10 @@ else
     [Data, Model] = loadormakedatafile(Model,manualcounts,Runtype);
 
     % Check for long sections without data:
-    % long sections are in this context corresponding to 20 mean layer
+    % Long sections are in this context corresponding to 20 mean layer
     % thicknesses without much data:
     sectionswithoutdata(Data,20*meanLambda,Model.species);
 end
-
-% If no manual counts are known, an empty array should be provided.
-% Similarly if information from manual counts should be disregarded:
-% manualcounts = [];
-
-%% Save an updated version of "Model" in output folder:
-save([outputdir '/Model.mat'],'Model')
 
 %% Initial layer templates and layer parameters:
 % These are based on manual layer counts in the data in the depth interval
@@ -194,7 +193,7 @@ save([outputdir '/Model.mat'],'Model')
 if isempty(Model.manualtemplates)
     disp('Could allow for using e.g. a sinusoidal layer template. Not implemented.')
 else
-    [Template0,Template0Info] = ...
+    [Template0,Template0Info,Model] = ...
         constructmanualtemplates(Data,Model,outputdir,Runtype);
 end
 
@@ -218,6 +217,9 @@ else
     Layerpar0 = constructmanualpar(Data,Template0,Model,outputdir,Runtype);
 end
 
+%% Save an updated version of "Model" in output folder:
+save([outputdir '/Model.mat'],'Model')
+
 %% Set initial conditions, and initialize arrays:
 [nBatch,batchStart,Layer0,Template,Prior,Layerpar,dDxLambda,logPobs,...
     logPobsNorm,relweight,Result] = setinitialconditions(Data,Model,...
@@ -237,7 +239,7 @@ logPobs_alldata = 0;
 iBatch = 0;
 data_final = [];
 
-while iBatch < nBatch
+while iBatch < nBatch    
     %% Batch number:
     iBatch = iBatch+1;
     if nBatch<10; dispBatch = 1; else dispBatch = 5; end
@@ -248,7 +250,6 @@ while iBatch < nBatch
 
     %% 1a: Select data corresponding to current batch:
     % And provide an upper-bound estimate of the number of layers in batch.
-
     if isempty(Model.tiepoints)
         % Situation A: No tiepoints.
         % We select a section of appropriate length. This section may be
@@ -261,7 +262,7 @@ while iBatch < nBatch
         batchEnd = min(batchStart(iBatch)+batchLength-1,length(Data.depth));
         % Upper-bound estimate of years (incl. uncertainties) in batch:
         nLayerMax = round(1.3*Model.nLayerBatch);
-        % If indications arise that this value should be larger, it will be
+        % If indications that this value should be larger, it will be
         % increased with each batch iteration.
 
         % In case there is less left than a full batch of data, the current
@@ -273,8 +274,8 @@ while iBatch < nBatch
 
             % Maximum number of layers in batch is then:
             nLayerMean = (Data.depth(end)-Data.depth(batchStart(iBatch)))/meanLambda;
-            nLayerMax = round(1.3*nLayerMean);
-
+            nLayerMax = round(1.3*nLayerMean);            
+            
             % Do not use any overlap section for the last data batch:
             Model.batchOverlap = 0;
             disp(['Stopping at batch ' num2str(iBatch) ', ' ...
@@ -322,8 +323,8 @@ while iBatch < nBatch
     data_in = Data.data(istart:iend,:,:);
     depth_in = Data.depth(istart:iend);
 
-    % Preprocess batch data:
-    data_out = makedatafile(data_in,depth_in,preprocsteps,Model.derivatives);
+    % Preprocess batch data (keep depth scale):
+    data_out = makedatafile(data_in,depth_in,preprocsteps,Model.derivatives,depth_in);
     % Save resulting data record:
     data_final = [data_final; data_out];
 
@@ -367,7 +368,7 @@ while iBatch < nBatch
                 layerdetection(data_batch,Template(:,iBatch,iTemplateBatch),...
                 Layerpar(iBatch,iTemplateBatch,iIter),Layer0(iBatch),...
                 nLayerMax,Model,Runtype.plotlevel);
-
+            
             %% 2c: New estimates for layer parameters:
             [Layerpar_new, relweight_new] = ...
                 updatelayerpar(ExpVal_new,FBprob_new,Prior(iBatch),...
@@ -388,14 +389,15 @@ while iBatch < nBatch
             logPobs(iBatch,iTemplateBatch,iIter+1) = logPobs_new;
 
             % New estimate for maximum numbers of layer in batch:
-            nLayerMax = nLayerMax_new;
-
+            nLayerMax = nLayerMax_new;                
+            
             %% 2e: Stopping criteria reached?
             % Using log(P_obs) to test for convergence:
-            if abs(logPobs(iBatch,iTemplateBatch,iIter)-...
-                    logPobs(iBatch,iTemplateBatch,iIter+1))>Model.eps && ...
+            if logPobs(iBatch,iTemplateBatch,iIter+1)-...
+                    logPobs(iBatch,iTemplateBatch,iIter)>Model.eps && ...
                     iIter<Model.nIter;
-                    iIter = iIter+1;
+                iIter = iIter+1;
+                
             else
                 % Convergence or maximum iteration value has been reached.
                 % Number of iterations performed:
@@ -418,7 +420,8 @@ while iBatch < nBatch
               end
            end
            figure(hfig_logPobs)
-           plot(squeeze(logPobs(iBatch,iTemplateBatch,2:end)),'.-','color',[1 1 1]*(iTemplateBatch-1)/Model.nTemplateBatch);
+           plot(squeeze(logPobs(iBatch,iTemplateBatch,2:end)),'.-',...
+               'color',[1 1 1]*(iTemplateBatch-1)/Model.nTemplateBatch);
            hold on
            title(['Batch: ' num2str(iBatch)],'fontweight','bold')
            xlabel('Iteration number')
@@ -441,10 +444,11 @@ while iBatch < nBatch
        Template(:,iBatch,iTemplateBatch+1)=Template_new;
 
        % Plot new layer templates (and compare to original ones):
-       if Runtype.plotlevel > 0
+       if Runtype.plotlevel > 1
            color = [1 0 1; 1 1 0; 1 0.5 0.5; 0 0 1];
            filename = [outputdir '/layertemplates_new'];
-           plotlayertemplates(Template_new,TemplateInfo_new,Model,hfig_template,color,filename);
+           plotlayertemplates(Template_new,TemplateInfo_new,Model,...
+               hfig_template,color,filename);
        end
 
 %        % Possibility for updating the layer templates:
@@ -483,7 +487,7 @@ while iBatch < nBatch
         [~,~,~,timescale_prelim,timescale1yr_prelim,~,...
              markerConf_prelim,lambda_prelim] = ...
              combinebatches(Result(1:iBatch),manualcounts,Model);
-
+         
         % Save preliminary output:
         save([outputdir '/timescale1yr_prelim'],'timescale1yr_prelim')
         save([outputdir '/markerhorizons_prelim'],'markerConf_prelim')
@@ -576,7 +580,8 @@ batchStartDepth = Data.depth(batchStart);
 save([outputdir '/timescale.mat'],...
     'timescale','timescale1yr','Layerpos','LayerProbDist','centralEst','Model')
 % Save timescale1yr as textfile with metadata:
-filename = [outputdir '/' Model.icecore '_timescale.txt'];
+filename = [outputdir '/' Model.icecore '_timescale_' num2str(Model.dstart) ...
+    '-' num2str(Model.dend) 'm.txt'];
 savetimescaleastxt(timescale1yr,filename,Model)
 
 % Confidence interval for marker horizons:
@@ -642,7 +647,8 @@ data_out = makedatafile(Data.data,Data.depth,preprocsteps,Model.derivatives);
 if Runtype.plotlevel > 0
     color = [1 0 1; 1 1 0; 1 0.5 0.5; 0 0 1]*0.5;
     filename = [outputdir '/layertemplates_new'];
-    plotlayertemplates(Template_new,TemplateInfo_new,Model,hfig_template,color,filename);
+    plotlayertemplates(Template_new,TemplateInfo_new,Model,...
+        hfig_template,color,filename);
 end
 
 %% Clean-up: Remove preliminary datafiles and figures
@@ -662,7 +668,10 @@ end
 %% Display name of output directory:
 disp(['Output directory: ' outputdir])
 
+%% Calculate similarity to manual layer counts:
+% similarity = similarityindex(timescale1yr(:,1),manualcounts(:,1),[],Model.dx,[],Runtype.plotlevel)
+
 %% Show results in matchmaker:
-if ~isdeployed
-    checkinmatchmaker(outputdir,Model,Runtype);
+if Runtype.plotlevel>0
+    checkinmatchmaker(outputdir,Model,[],Runtype);
 end

@@ -4,7 +4,8 @@ function [data1,hfig] = preprocessdata(data0,depth,preprocsteps,plotlevel,...
 %% [data1,hfig] = preprocessdata(data0,depth,preprocsteps,plotlevel,species,...
 %%   layercounts)
 % Preprocessing a (single) data series to obtain the best identifiable
-% annual layer signal in the data. 
+% annual layer signal in the data. "Species" and "layercounts" are only
+% used for plotting. 
 % The following steps may be taken (in any order): 
 % Non-distance dependent transformations:
 % - No processing ([])
@@ -73,7 +74,7 @@ for iStep = 1:nSteps
         case 'log'
             % If necessary, add minimum value to prevent data from becoming 
             % negative:
-            minvalue = min(data0);
+            minvalue = min(data);
             if minvalue < 0
                 minvalue = floor(minvalue);
                 data = data+abs(minvalue);
@@ -98,7 +99,7 @@ for iStep = 1:nSteps
 
         case 'minusbaseline'
             quantile = 0.05; % baseline corresponds to the 5% quantile
-            baseline = findbaseline(depth,data0,procdist(1),quantile,0);
+            baseline = findbaseline(depth,data,procdist(1),quantile,0);
             data1 = data-baseline;
          
         case 'minussmooth'
@@ -112,7 +113,7 @@ for iStep = 1:nSteps
     end
 
     %% Update data:
-    data0 = data1;
+    data = data1;
 end
 end
 
@@ -152,6 +153,6 @@ plotlayercounts(layercounts,data_fig)
 text = preproctype;
 if ~isempty(procdist); text = [text '(' num2str(procdist) ')']; end
 if ~isempty(procval); text = [text '(' num2str(procval) ')']; end
-title(text,'fontweight','bold')
+title(text,'fontweight','bold','interpreter','none')
 xlim([dstart_fig dend_fig])
 end

@@ -36,12 +36,12 @@ Model.dx = 10^-3; % [m/px]
 % If Model.dx is empty: No interpolation to equidistant depthscale (this 
 % option is not fully implemented). 
 % The resolution is allowed to (slowly) change with depth. 
-Model.dx_center = 0;
-% If using e.g. midpoints of dx intervals, the value of dx_center should
+Model.dx_offset = 0;
+% If using e.g. midpoints of dx intervals, the value of dx_offset should
 % be set as 0.5 (to avoid unnecessary interpolation). 
 
 % Preprocessing of each data series:
-Model.preprocsteps{1:Model.nSpecies,1:2} = []; 
+Model.preprocsteps = cell(Model.nSpecies,2); 
 % 1st row: Initial preprocessing
 % 2nd row: Batch preprocessing 
 
